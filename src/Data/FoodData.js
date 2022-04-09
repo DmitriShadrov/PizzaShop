@@ -45,11 +45,11 @@ export const foodItems = [
     img: 'img/fries.jpg',
     section: 'Sides',
 },
-// {
-//     name: 'Chicken Salad',
-//     img: 'img/salad.jpg',
-//     section: 'Sides',
-// },
+{
+    name: 'Chicken Salad',
+    img: 'img/salad.jpg',
+    section: 'Sides',
+},
 ]
 
 export const foods = foodItems.reduce((res, food) => {
