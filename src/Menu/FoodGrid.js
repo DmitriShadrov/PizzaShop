@@ -7,13 +7,13 @@ export const FoodGrid = styled.div`
     gap: 20px;
 `
 
-export const FoodLadel = styled.div`
+export const FoodLadel = styled(Title)`
     position: absolute;
     background-color: #ffffff91;
     padding: 5px;
 `
 
-export const Food = styled(Title)`
+export const Food = styled.div`
     height: 200px;
     padding: 10px;
     font-size: 20px;
