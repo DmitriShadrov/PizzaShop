@@ -30,7 +30,10 @@ const OrderItem = styled.div`
     grid-template-columns: 20px 150px 20px 60px;
     justify-content: space-between;
 `;
-
+const DetalItems = styled.div`
+    color: gray;
+    font-size: 12px;
+`;
 export function Order({orders}){
     const subtotal = orders.reduce((total, order) => {
         return total + getPrice(order);
@@ -51,6 +54,13 @@ export function Order({orders}){
                                     <div/>
                                     <div>{formatPrice(getPrice(order))}</div>
                                 </OrderItem>
+                                <DetalItems>
+                                    {order.toppings
+                                        .filter(t => t.checked)
+                                        .map(topping => topping.name)
+                                        .join(",")
+                                    }
+                                </DetalItems>
                             </OrderContainer>
                         ))}
                         <OrderContainer>
