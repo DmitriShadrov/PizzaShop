@@ -8,6 +8,8 @@ import { QuantityInput } from "./QuantityInput";
 import { useQuantity } from "../Hooks/useQuantity";
 import { Toppings } from "./Toppings";
 import { useToppings } from "../Hooks/useToppings";
+import { useChoice } from "../Hooks/useChoice";
+import { Choices } from "./Choices";
 
 const Dialog = styled.div`
     width: 500px;
@@ -23,7 +25,7 @@ const Dialog = styled.div`
 export const DialogContent = styled.div`
     overflow: auto;
     min-height: 100px;
-    padding: 0px 40px;
+    padding: 30px 40px;
     padding-buttom: 80px;
     
 `;
@@ -43,6 +45,12 @@ export const ConfirmButton = styled(Title)`
     width: 200px;
     cursor: pointer;
     background-color: ${pizzaRed};
+    ${({disabled}) => disabled && 
+    `
+        opactity: 0.5;
+        background-color: gray;
+        pointer-events: none;
+    `}
 `;
 
 
@@ -59,18 +67,19 @@ const DialogShadow = styled.div`
 const DialogBanner = styled.div`
     min-height: 200px;
     margin-bottom: 20px;
-    ${({img}) => `background-image: url(${img});`}
+    ${({img}) => (img ?`background-image: url(${img});` : `min-height: 75px;`)}
     background-position: center;
     background-size: cover;
 
 `;
 const DialogBannerName = styled(FoodLadel)`
-    top: 100px;
+    top: ${({img}) => (img ? `100px` : `20px`)};
     font-size: 30px;
     pading: 5px 40px;
 `;
 
 const pricePerTopping = 2;
+
 export function getPrice(order){
     return order.quantity * (order.price + order.toppings.filter(t => t.checked).length * pricePerTopping);
 }
@@ -81,6 +90,7 @@ function hasToppings(food){
 function FoodDialogContainer({openFood, setOpenFood, setOrders, orders}){
     const quantity = useQuantity(openFood && openFood.quantity);
     const toppings = useToppings(openFood.toppings);
+    const choiceRadio = useChoice(openFood.choice);
 
     function close(){
         setOpenFood();
@@ -88,7 +98,8 @@ function FoodDialogContainer({openFood, setOpenFood, setOrders, orders}){
     const order = {
         ...openFood,
         quantity: quantity.value,
-        toppings: toppings.toppings
+        toppings: toppings.toppings,
+        choices: choiceRadio.value,
     };  
     function addToOrder(){
         setOrders([...orders, order]);
@@ -104,13 +115,16 @@ function FoodDialogContainer({openFood, setOpenFood, setOrders, orders}){
                     </DialogBanner>
                     <DialogContent>
                         <QuantityInput quantity={quantity}/>
-                        {hasToppings(openFood) && <>
+                        {hasToppings(openFood) && (
+                        <>
                             <h3>Would you like toppings? </h3>
                             <Toppings {...toppings}/>
-                        </>}
+                        </>
+                        )}
+                        {openFood.choices && <Choices openFood={openFood} choiceRadio={choiceRadio}/>}
                     </DialogContent>
                     <DialogFooter>
-                        <ConfirmButton onClick={addToOrder}>
+                        <ConfirmButton onClick={addToOrder} disabled={openFood.choices && !choiceRadio.value}>
                             Add to order: {formatPrice(getPrice(order))}
                         </ConfirmButton>
                     </DialogFooter>

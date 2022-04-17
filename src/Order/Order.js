@@ -61,6 +61,7 @@ export function Order({orders}){
                                         .join(",")
                                     }
                                 </DetalItems>
+                                {order.choices && <DetalItems>{order.choices}</DetalItems>}
                             </OrderContainer>
                         ))}
                         <OrderContainer>
